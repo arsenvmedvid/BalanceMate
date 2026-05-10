@@ -44,7 +44,6 @@ async def get_weight(update: Update, context: ContextTypes.DEFAULT_TYPE):
     n = logic.calculate_norms(user["weight"], user["height"], user["age"], user["gender"])
     user["norms"] = n
     
-    # ПОВЕРНУТО ДИЗАЙН ПЛАНУ
     await update.message.reply_text(
         f"📊 Твій план:\n"
         f"🔥 {n['cal']} ккал | 🥩 Б: {n['p']}г | 🥑 Ж: {n['f']}г | 🍞 В: {n['c']}г\n\n"
@@ -64,7 +63,7 @@ async def process_next_pending_food(update: Update, context: ContextTypes.DEFAUL
     if not pending:
         return await send_final_report(update, context)
     
-    current = pending.pop(0)
+    current = pending.pop(0)    
     context.user_data["current_weight"] = current["weight"]
     db = logic.load_food_db()
     matches = logic.find_food_matches(current["name"], db)
@@ -105,10 +104,9 @@ def add_to_totals(context, food, weight):
     t["f"] += food["fats"] * r
     t["c"] += food["carbs"] * r
     
-    # ПОВЕРНУТО ДИЗАЙН ПІДТВЕРДЖЕННЯ СТРАВИ
     res = (f"✅ {food['name']} ({weight}г):\n"
-           f"🔥 {round(food['calories']*r)} ккал | 🥩 Б: {round(food['proteins']*r)}г | "
-           f"🥑 Ж: {round(food['fats']*r)}г | 🍞 В: {round(food['carbs']*r)}г")
+            f"🔥 {round(food['calories']*r)} ккал | 🥩 Б: {round(food['proteins']*r)}г | "
+            f"🥑 Ж: {round(food['fats']*r)}г | 🍞 В: {round(food['carbs']*r)}г")
     context.user_data["final_report"].append(res)
 
 async def send_final_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -117,7 +115,6 @@ async def send_final_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     msg = "\n\n".join(rep)
     if t["cal"] > 0:
-        # ПОВЕРНУТО ДИЗАЙН ПІДСУМКУ
         msg += f"\n\n**РАЗОМ:**\n🔥 {round(t['cal'])} ккал | 🥩 Б: {round(t['p'])}г | 🥑 Ж: {round(t['f'])}г | 🍞 В: {round(t['c'])}г"
     
     await update.message.reply_text(msg, parse_mode="Markdown", reply_markup=ReplyKeyboardRemove())
